@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "pedronogueira-d3-avaliacao/1.0.0": {
+        "runtime": {
+          "pedronogueira-d3-avaliacao.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "pedronogueira-d3-avaliacao/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
