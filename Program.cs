@@ -5,9 +5,6 @@ namespace pedronogueira_d3_avaliacao
 {
     internal class Program
     {
-
-        private const string path = "database/log.txt";
-
         static void Main(string[] args)
         {
             UserRepository _user = new();

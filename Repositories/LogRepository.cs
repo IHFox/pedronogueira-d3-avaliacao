@@ -1,5 +1,4 @@
 ﻿using pedronogueira_d3_avaliacao.Interfaces;
-using pedronogueira_d3_avaliacao.Models;
 using System.Text;
 
 namespace pedronogueira_d3_avaliacao.Repositories
@@ -36,15 +35,18 @@ namespace pedronogueira_d3_avaliacao.Repositories
         }
         private static string PrepareLine(string name, string id)
         {
-            return $"O usuário {name} ({id}) acessou o sistema às {DateTime.Now.TimeOfDay} do dia {DateTime.Now.Date}.\n";
+            return $"O usuário {name} ({id}) acessou o sistema às {DateTime.Now.ToString("HH:mm:ss")} do dia {DateTime.Now.ToShortDateString()}.\n";
+            
         }
 
         public void RegisterAccess(string name, string id)
         {
             string line = PrepareLine(name, id);
             byte[] info = new UTF8Encoding(true).GetBytes(line);
-            Console.WriteLine("Passou por aqui");
-            fileStream.Write(info);
+            using (this.fileStream)
+            {
+                fileStream.Write(info);
+            }
         }
     }
 }
