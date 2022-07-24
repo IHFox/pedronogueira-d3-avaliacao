@@ -1,9 +1,19 @@
-﻿namespace pedronogueira_d3_avaliacao
+﻿using pedronogueira_d3_avaliacao.Models;
+using pedronogueira_d3_avaliacao.Repositories;
+
+namespace pedronogueira_d3_avaliacao
 {
     internal class Program
     {
+
+        private const string path = "database/log.txt";
+
         static void Main(string[] args)
         {
+            UserRepository _user = new();
+
+            LogRepository _log = new();
+
             string option;
 
             do
@@ -20,10 +30,11 @@
                 switch (option)
                 {
                     case "a":
+                        string id;
                         string login;
                         string password;
 
-                        Console.WriteLine("\nDigite seu e-mail:");
+                        Console.WriteLine("\nDigite seu nome de usuário:");
                         login = Console.ReadLine();
 
                         Console.WriteLine("\nDigite sua senha:");
@@ -31,9 +42,11 @@
 
                         if (true) // Checar se é um endereço de e-mail
                         {
-                            if (true) // Checar acesso com banco de dados
+                            id = _user.UserConnect(login, password); // Acessar banco de dados
+                            if (id != "0") // Checar acesso
                             {
                                 Console.WriteLine("\nLogin realizado com sucesso!\n");
+                                _log.RegisterAccess(login, id);
 
                                 do
                                 {
@@ -49,7 +62,7 @@
                                     switch (option)
                                     {
                                         case "d":
-                                            Console.WriteLine("\nUsuário {login} deslogado com sucesso!\n");
+                                            Console.WriteLine($"\nUsuário {login} deslogado com sucesso!\n");
                                             option = "e";
                                             break;
 
