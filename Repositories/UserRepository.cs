@@ -15,7 +15,7 @@ namespace pedronogueira_d3_avaliacao.Repositories
         /// initial catalog = Nome do banco de dados
         /// integrated security=true = Faz a autenticação com o usuário do sistema
         /// </summary>
-        private readonly string stringConexao = "Data source=localhost\\SQLEXPRESS; initial catalog=avaliacao_d3; integrated security=true;";
+        private readonly string stringConexao = "Data source=localhost\\SQLEXPRESS; initial catalog=pedronogueira-d3-avaliacao; integrated security=true;";
 
         public string UserConnect(string login, string password)
         {

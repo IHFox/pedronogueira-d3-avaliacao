@@ -43,7 +43,7 @@ namespace pedronogueira_d3_avaliacao
                             if (id != "0") // Checar acesso
                             {
                                 Console.WriteLine("\nLogin realizado com sucesso!\n");
-                                _log.RegisterAccess(login, id);
+                                _log.RegisterConnection(login, id, "logou");
 
                                 do
                                 {
@@ -60,6 +60,7 @@ namespace pedronogueira_d3_avaliacao
                                     {
                                         case "d":
                                             Console.WriteLine($"\nUsuário {login} deslogado com sucesso!\n");
+                                            _log.RegisterConnection(login, id, "deslogou");
                                             option = "e";
                                             break;
 

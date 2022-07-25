@@ -7,11 +7,13 @@ namespace pedronogueira_d3_avaliacao.Repositories
     {
         private const string path = "database\\log.txt";
         private readonly FileStream fileStream;
+        private readonly StreamWriter streamWriter;
 
         public LogRepository()
         {
             CreateFolderAndFile(path);
-            this.fileStream = File.OpenWrite(path);
+            this.fileStream = new FileStream(path, FileMode.Append);
+            this.streamWriter = new StreamWriter(this.fileStream, leaveOpen: true);
         }
 
         public static void CreateFolderAndFile(string path)
@@ -25,7 +27,7 @@ namespace pedronogueira_d3_avaliacao.Repositories
 
                 if (!File.Exists(path))
                 {
-                    File.Create(path);
+                    File.Create(path).Close();
                 }
             }
             catch (Exception e)
@@ -33,19 +35,18 @@ namespace pedronogueira_d3_avaliacao.Repositories
                 Console.WriteLine("Erro na criação: {0}", e.ToString());
             }
         }
-        private static string PrepareLine(string name, string id)
+        private static string PrepareLine(string name, string id, string state)
         {
-            return $"O usuário {name} ({id}) acessou o sistema às {DateTime.Now.ToString("HH:mm:ss")} do dia {DateTime.Now.ToShortDateString()}.\n";
+            return $"O usuário {name} ({id}) {state} no sistema às {DateTime.Now.ToString("HH:mm:ss")} do dia {DateTime.Now.ToShortDateString()}.\n";
             
         }
 
-        public void RegisterAccess(string name, string id)
+        public void RegisterConnection(string name, string id, string state)
         {
-            string line = PrepareLine(name, id);
-            byte[] info = new UTF8Encoding(true).GetBytes(line);
-            using (this.fileStream)
+            string line = PrepareLine(name, id, state);
+            using (this.streamWriter)
             {
-                fileStream.Write(info);
+                streamWriter.WriteLine(line);
             }
         }
     }
