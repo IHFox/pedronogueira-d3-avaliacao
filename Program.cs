@@ -31,21 +31,26 @@ namespace pedronogueira_d3_avaliacao
                         string id;
                         string login;
                         string password;
+                        publicUser user = new();
 
                         Console.WriteLine("\nDigite seu nome de usuário:");
                         login = Console.ReadLine();
 
-                        Console.WriteLine("\nDigite sua senha:");
-                        password = Console.ReadLine();
-
-                        if (true) // Checar se é um endereço de e-mail
+                        if (_user.IsValidEmail(login)) // Checar se é um endereço de e-mail
                         {
-                            id = _user.UserConnect(login, password); // Acessar banco de dados
-                            if (id != "0") // Checar acesso
+
+                            Console.WriteLine("\nDigite sua senha:");
+                            password = Console.ReadLine();
+
+
+                            user = _user.UserConnect(login, password); // Acessar banco de dados
+                            if (user != null) // Checar acesso
                             {
                                 Console.Clear();
+                                Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("\nLogin realizado com sucesso!\n");
-                                _log.RegisterConnection(login, id, "logou");
+                                Console.ResetColor();
+                                _log.RegisterConnection(user.Name, user.IdUser, "logou");
 
                                 do
                                 {
@@ -62,8 +67,8 @@ namespace pedronogueira_d3_avaliacao
                                     {
                                         case "d":
                                             Console.Clear();
-                                            Console.WriteLine($"\nUsuário {login} deslogado com sucesso!\n");
-                                            _log.RegisterConnection(login, id, "deslogou");
+                                            Console.WriteLine($"\nUsuário {user.Name} deslogado com sucesso!\n");
+                                            _log.RegisterConnection(user.Name, user.IdUser, "deslogou");
                                             option = "e";
                                             break;
 
@@ -73,7 +78,9 @@ namespace pedronogueira_d3_avaliacao
 
                                         default:
                                             Console.Clear();
+                                            Console.ForegroundColor = ConsoleColor.Red;
                                             Console.WriteLine("\nOpção inválida!\n");
+                                            Console.ResetColor();
                                             break;
                                     }
                                 } while (option != "e");
@@ -81,13 +88,17 @@ namespace pedronogueira_d3_avaliacao
                             else
                             {
                                 Console.Clear();
+                                Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("\nUsuário ou senha inválidos!\n");
+                                Console.ResetColor();
                             }
                         }
                         else
                         {
                             Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("\nDigite um endereço de e-mail válido!\n");
+                            Console.ResetColor();
                         }
                         break;
 
@@ -97,7 +108,9 @@ namespace pedronogueira_d3_avaliacao
 
                     default:
                         Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("\nOpção inválida!\n");
+                        Console.ResetColor();
                         break;
                 }
 

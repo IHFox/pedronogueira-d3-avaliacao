@@ -7,6 +7,6 @@ namespace pedronogueira_d3_avaliacao.Interfaces
     /// </summary>
     internal interface IUser
     {
-        public string UserConnect(string login, string password);
+        public publicUser UserConnect(string login, string password);
     }
 }

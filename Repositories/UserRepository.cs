@@ -1,6 +1,8 @@
 ﻿using pedronogueira_d3_avaliacao.Interfaces;
 using pedronogueira_d3_avaliacao.Models;
 using System.Data.SqlClient;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace pedronogueira_d3_avaliacao.Repositories
 {
@@ -17,13 +19,13 @@ namespace pedronogueira_d3_avaliacao.Repositories
         /// </summary>
         private readonly string stringConexao = "Data source=localhost\\SQLEXPRESS; initial catalog=pedronogueira-d3-avaliacao; integrated security=true;";
 
-        public string UserConnect(string login, string password)
+        public publicUser UserConnect(string login, string password)
         {
             // Declara a SqlConnection con passando a string de conexão como parâmetro
             using (SqlConnection con = new SqlConnection(stringConexao))
             {
                 // Declara a instrução a ser executada
-                string querySelect = $"SELECT user_name, user_password, user_id FROM Users WHERE (user_name='{login}' AND user_password='{password}')";
+                string querySelect = $"SELECT user_name, user_password, user_id FROM Users WHERE (user_email='{login}' AND user_password='{password}')";
 
                 // Abre a conexão com o banco de dados
                 con.Open();
@@ -38,18 +40,69 @@ namespace pedronogueira_d3_avaliacao.Repositories
                     rdr = cmd.ExecuteReader();
                     if (rdr.HasRows)
                     {
-                        // Retorna o id
+                        // Retorna usuário público
                         while (rdr.Read())
                         {
-                            return rdr["user_id"].ToString();
+                            publicUser user = new() {
+                            // Atribui à propriedade nome o valor da coluna "user_id" da tabela do banco de dados
+                            IdUser = Guid.Parse((string)rdr["user_id"]),
+                            
+                            // Atribui à propriedade nome o valor da coluna "user_name" da tabela do banco de dados
+                            Name = rdr["user_name"].ToString()
+                            };
+
+                            return user;
                         }
-                        return "0";
+                        return null;
                     }
                     else
                     {
-                        return "0";
+                        return null;
                     }
                 }
+            }
+        }
+        public bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                // Normalize the domain
+                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
+                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
+
+                // Examines the domain part of the email and normalizes it.
+                string DomainMapper(Match match)
+                {
+                    // Use IdnMapping class to convert Unicode domain names.
+                    var idn = new IdnMapping();
+
+                    // Pull out and process domain name (throws ArgumentException on invalid)
+                    string domainName = idn.GetAscii(match.Groups[2].Value);
+
+                    return match.Groups[1].Value + domainName;
+                }
+            }
+            catch (RegexMatchTimeoutException e)
+            {
+                return false;
+            }
+            catch (ArgumentException e)
+            {
+                return false;
+            }
+
+            try
+            {
+                return Regex.IsMatch(email,
+                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
             }
         }
     }

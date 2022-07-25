@@ -35,13 +35,13 @@ namespace pedronogueira_d3_avaliacao.Repositories
                 Console.WriteLine("Erro na criação: {0}", e.ToString());
             }
         }
-        private static string PrepareLine(string name, string id, string state)
+        private static string PrepareLine(string name, Guid id, string state)
         {
             return $"O usuário {name} ({id}) {state} no sistema às {DateTime.Now.ToString("HH:mm:ss")} do dia {DateTime.Now.ToShortDateString()}.\n";
             
         }
 
-        public void RegisterConnection(string name, string id, string state)
+        public void RegisterConnection(string name, Guid id, string state)
         {
             string line = PrepareLine(name, id, state);
             using (this.streamWriter)

@@ -16,4 +16,11 @@ namespace pedronogueira_d3_avaliacao.Models
 
         public string Password { get; set; } = string.Empty;
     }
+
+    internal class publicUser
+    {
+        public Guid IdUser { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+    }
 }

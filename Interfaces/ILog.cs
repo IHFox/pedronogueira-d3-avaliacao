@@ -4,6 +4,6 @@ namespace pedronogueira_d3_avaliacao.Interfaces
 {
     internal interface ILog
     {
-        void RegisterConnection(string name, string id, string state);
+        void RegisterConnection(string name, Guid id, string state);
     }
 }
