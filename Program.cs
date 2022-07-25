@@ -12,6 +12,7 @@ namespace pedronogueira_d3_avaliacao
             LogRepository _log = new();
 
             string option;
+            Console.WriteLine("\n\n");
 
             do
             {
@@ -42,6 +43,7 @@ namespace pedronogueira_d3_avaliacao
                             id = _user.UserConnect(login, password); // Acessar banco de dados
                             if (id != "0") // Checar acesso
                             {
+                                Console.Clear();
                                 Console.WriteLine("\nLogin realizado com sucesso!\n");
                                 _log.RegisterConnection(login, id, "logou");
 
@@ -59,6 +61,7 @@ namespace pedronogueira_d3_avaliacao
                                     switch (option)
                                     {
                                         case "d":
+                                            Console.Clear();
                                             Console.WriteLine($"\nUsuário {login} deslogado com sucesso!\n");
                                             _log.RegisterConnection(login, id, "deslogou");
                                             option = "e";
@@ -69,6 +72,7 @@ namespace pedronogueira_d3_avaliacao
                                             break;
 
                                         default:
+                                            Console.Clear();
                                             Console.WriteLine("\nOpção inválida!\n");
                                             break;
                                     }
@@ -76,11 +80,13 @@ namespace pedronogueira_d3_avaliacao
                             }
                             else
                             {
+                                Console.Clear();
                                 Console.WriteLine("\nUsuário ou senha inválidos!\n");
                             }
                         }
                         else
                         {
+                            Console.Clear();
                             Console.WriteLine("\nDigite um endereço de e-mail válido!\n");
                         }
                         break;
@@ -90,6 +96,7 @@ namespace pedronogueira_d3_avaliacao
                         break;
 
                     default:
+                        Console.Clear();
                         Console.WriteLine("\nOpção inválida!\n");
                         break;
                 }

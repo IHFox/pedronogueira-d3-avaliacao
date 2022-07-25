@@ -5,7 +5,7 @@ namespace pedronogueira_d3_avaliacao.Repositories
 {
     internal class LogRepository : ILog
     {
-        private const string path = "database\\log.txt";
+        private const string path = ".\\log.txt";
         private readonly FileStream fileStream;
         private readonly StreamWriter streamWriter;
 
