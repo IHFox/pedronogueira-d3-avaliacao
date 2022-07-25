@@ -19,6 +19,12 @@ namespace pedronogueira_d3_avaliacao.Repositories
         private readonly string stringConexao = "Data source=localhost\\SQLEXPRESS; initial catalog=pedronogueira-d3-avaliacao; integrated security=true;";
         SecurityRepository _security = new();
 
+        /// <summary>
+        /// Realiza conexão com banco de dados e verifica a correspondência de usuário e senhas passados
+        /// </summary>
+        /// <param name="login">Usuário (e-mail)</param>
+        /// <param name="password">Senha em formato "plain text"</param>
+        /// <returns>Dados públicos de usuário (caso haja correspondência) ou null caso contrário</returns>
         public publicUser UserConnect(string login, string password)
         {
             // Declara a instrução a ser executada
@@ -27,6 +33,7 @@ namespace pedronogueira_d3_avaliacao.Repositories
             // Declara a SqlConnection con passando a string de conexão como parâmetro
             using (SqlConnection con = new SqlConnection(stringConexao))
             {
+                // Declara o SqlCommand cmd passando a query que será executada e a conexão como parâmetros
                 SqlCommand cmd = new SqlCommand(querySelect, con);
                 cmd.Parameters.AddWithValue("@email", login);
 
@@ -35,21 +42,20 @@ namespace pedronogueira_d3_avaliacao.Repositories
 
                 // Declara o SqlDataReader rdr para percorrer a tabela do banco de dados
                 SqlDataReader rdr;
-
-                // Declara o SqlCommand cmd passando a query que será executada e a conexão como parâmetros
+                
                 using (cmd)
                 {
                     // Executa a query e armazena os dados no rdr
                     rdr = cmd.ExecuteReader();
 
-                    // Retorna usuário público
+                    // Retorna o usuário público
                     while (rdr.Read())
                     {
                         if (_security.PasswordCompare(rdr["user_password"].ToString(), password))
                         {
                             publicUser user = new()
                             {
-                                // Atribui à propriedade nome o valor da coluna "user_id" da tabela do banco de dados
+                                // Atribui à propriedade IdUser o valor da coluna "user_id" da tabela do banco de dados
                                 IdUser = Guid.Parse((string)rdr["user_id"]),
 
                                 // Atribui à propriedade nome o valor da coluna "user_name" da tabela do banco de dados

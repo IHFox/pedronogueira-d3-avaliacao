@@ -5,6 +5,11 @@ namespace pedronogueira_d3_avaliacao.Repositories
 {
     internal class SecurityRepository
     {
+        /// <summary>
+        /// Verifica se o e-mail digitado é um e-mail válido (possui @ e .)
+        /// </summary>
+        /// <param name="email">E-mail a ser verificado</param>
+        /// <returns>True caso o parâmetro email seja um e-mail válido</returns>
         public bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -12,17 +17,17 @@ namespace pedronogueira_d3_avaliacao.Repositories
 
             try
             {
-                // Normalize the domain
+                // Normaliza o domínio
                 email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
                                       RegexOptions.None, TimeSpan.FromMilliseconds(200));
 
-                // Examines the domain part of the email and normalizes it.
+                // Examina a parte de domínio do e-mail e normaliza ela
                 string DomainMapper(Match match)
                 {
-                    // Use IdnMapping class to convert Unicode domain names.
+                    // Usa classe IdnMapping para converter nomes de domínio em Unicode
                     var idn = new IdnMapping();
 
-                    // Pull out and process domain name (throws ArgumentException on invalid)
+                    // Pega e processa o nome de domínio (dispara ArgumentException quando inválido)
                     string domainName = idn.GetAscii(match.Groups[2].Value);
 
                     return match.Groups[1].Value + domainName;
@@ -49,6 +54,10 @@ namespace pedronogueira_d3_avaliacao.Repositories
             }
         }
 
+        /// <summary>
+        /// Esconde a senha quando a mesma está sendo escrita no console com *
+        /// </summary>
+        /// <returns>Senha digitada como "plain text"</returns>
         public string ReadPassword()
         {
             string password = "";
@@ -64,28 +73,33 @@ namespace pedronogueira_d3_avaliacao.Repositories
                 {
                     if (!string.IsNullOrEmpty(password))
                     {
-                        // remove one character from the list of password characters
+                        // Remove um caracter da lista de caracteres da senha
                         password = password.Substring(0, password.Length - 1);
-                        // get the location of the cursor
+                        // Pega a posição do cursor
                         int pos = Console.CursorLeft;
-                        // move the cursor to the left by one character
+                        // Move o cursor para a esqurda por um caracter
                         Console.SetCursorPosition(pos - 1, Console.CursorTop);
-                        // replace it with space
+                        // Substitui com espço
                         Console.Write(" ");
-                        // move the cursor to the left by one character again
+                        // Move o cursor para a esquerda por um caracter de novo
                         Console.SetCursorPosition(pos - 1, Console.CursorTop);
                     }
                 }
                 info = Console.ReadKey(true);
             }
-            // add a new line because user pressed enter at the end of their password
+            // Adiciona uma nova linha pois o usuário pressionou enter no fim de sua senha
             Console.WriteLine();
             return password;
         }
 
+        /// <summary>
+        /// Geração da Hash com o BCrypt
+        /// </summary>
+        /// <param name="password">senha em formato "plain text"</param>
+        /// <returns>Senha em formato Hash</returns>
         public string HashGeneration(string password)
         {
-            int workfactor = 10; // 2^10 = 1024 iterations
+            int workfactor = 10; // 2^10 = 1024 iterações
 
             string salt = BCrypt.Net.BCrypt.GenerateSalt(workfactor);
             string hash = BCrypt.Net.BCrypt.HashPassword(password, salt);
@@ -93,6 +107,12 @@ namespace pedronogueira_d3_avaliacao.Repositories
             return hash;
         }
 
+        /// <summary>
+        /// Comparação de hash com senha em "plain text"
+        /// </summary>
+        /// <param name="hash">senha em formato hash</param> 
+        /// <param name="password">senha em formato "plain text"</param> 
+        /// <returns>True caso a senha em formato "plain text" seja verificada com a senha em formato hash</returns>
         public bool PasswordCompare(string hash, string password)
         {
             return BCrypt.Net.BCrypt.Verify(password, hash);

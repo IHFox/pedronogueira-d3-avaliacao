@@ -47,7 +47,7 @@ namespace pedronogueira_d3_avaliacao
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("\nLogin realizado com sucesso!\n");
                                 Console.ResetColor();
-                                _log.RegisterConnection(user.Name, user.IdUser, "logou");
+                                _log.RegisterConnection(user.Name, user.IdUser, "logou"); // Escrita no arquivo log
 
                                 do
                                 {
@@ -64,8 +64,10 @@ namespace pedronogueira_d3_avaliacao
                                     {
                                         case "d":
                                             Console.Clear();
+                                            Console.ForegroundColor = ConsoleColor.Yellow;
                                             Console.WriteLine($"\nUsuário {user.Name} deslogado com sucesso!\n");
-                                            _log.RegisterConnection(user.Name, user.IdUser, "deslogou");
+                                            Console.ResetColor();
+                                            _log.RegisterConnection(user.Name, user.IdUser, "deslogou"); // Escrita no arquivo log
                                             option = "e";
                                             break;
 

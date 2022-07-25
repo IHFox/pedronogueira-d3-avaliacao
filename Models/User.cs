@@ -1,5 +1,8 @@
 ﻿namespace pedronogueira_d3_avaliacao.Models
 {
+    /// <summary>
+    /// Modelo para um usuário a ser escrito no banco de dados
+    /// </summary>
     internal class User
     {
         public Guid IdUser { get; set; }
@@ -11,6 +14,9 @@
         public string Password { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Modelo para dados públicos do usuário
+    /// </summary>
     internal class publicUser
     {
         public Guid IdUser { get; set; }
