@@ -17,7 +17,7 @@ GO
 
 -- Insere um registro na tabela
 INSERT INTO Users ([user_id], [user_name], [user_email], [user_password])
-VALUES ('df4759ac-cade-4bfe-b292-746cfef77249', 'admin', 'admin@email.com', 'admin123');
+VALUES ('df4759ac-cade-4bfe-b292-746cfef77249', 'admin', 'admin@email.com', '$2a$10$oTsSXoRTMPLyejkPM4Wr6OIOmte2ngY5oeR4eIC5PG/ApWrhxI.Ee');
 GO
 
 -- Lista os dados da tabela
