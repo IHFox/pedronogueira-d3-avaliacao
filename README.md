@@ -13,7 +13,7 @@
 ## Uso
  Verificação de login presente para usuário e senha seguintes:
 
-- Usuário: admin
+- Usuário: admin@email.com
 - Senha: admin123
 
 ## Executável
