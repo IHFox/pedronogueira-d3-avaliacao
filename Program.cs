@@ -40,7 +40,7 @@ namespace pedronogueira_d3_avaliacao
                         {
 
                             Console.WriteLine("\nDigite sua senha:");
-                            password = Console.ReadLine();
+                            password = _user.ReadPassword();
 
 
                             user = _user.UserConnect(login, password); // Acessar banco de dados
