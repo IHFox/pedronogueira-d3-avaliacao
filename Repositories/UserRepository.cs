@@ -1,5 +1,6 @@
 ﻿using pedronogueira_d3_avaliacao.Interfaces;
 using pedronogueira_d3_avaliacao.Models;
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -21,11 +22,15 @@ namespace pedronogueira_d3_avaliacao.Repositories
 
         public publicUser UserConnect(string login, string password)
         {
+            // Declara a instrução a ser executada
+            string querySelect = "SELECT user_name, user_password, user_id FROM Users WHERE (user_email= @email AND user_password= @password)";
+
             // Declara a SqlConnection con passando a string de conexão como parâmetro
             using (SqlConnection con = new SqlConnection(stringConexao))
             {
-                // Declara a instrução a ser executada
-                string querySelect = $"SELECT user_name, user_password, user_id FROM Users WHERE (user_email='{login}' AND user_password='{password}')";
+                SqlCommand cmd = new SqlCommand(querySelect, con);
+                cmd.Parameters.AddWithValue("@email", login);
+                cmd.Parameters.AddWithValue("@password", password);
 
                 // Abre a conexão com o banco de dados
                 con.Open();
@@ -34,7 +39,7 @@ namespace pedronogueira_d3_avaliacao.Repositories
                 SqlDataReader rdr;
 
                 // Declara o SqlCommand cmd passando a query que será executada e a conexão como parâmetros
-                using (SqlCommand cmd = new(querySelect, con))
+                using (cmd)
                 {
                     // Executa a query e armazena os dados no rdr
                     rdr = cmd.ExecuteReader();
