@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace pedronogueira_d3_avaliacao.Models
+﻿namespace pedronogueira_d3_avaliacao.Models
 {
     internal class User
     {

@@ -1,5 +1,4 @@
 ﻿using pedronogueira_d3_avaliacao.Interfaces;
-using System.Text;
 
 namespace pedronogueira_d3_avaliacao.Repositories
 {

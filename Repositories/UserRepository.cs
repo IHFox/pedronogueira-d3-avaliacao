@@ -2,8 +2,6 @@
 using pedronogueira_d3_avaliacao.Models;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace pedronogueira_d3_avaliacao.Repositories
 {
@@ -19,18 +17,18 @@ namespace pedronogueira_d3_avaliacao.Repositories
         /// integrated security=true = Faz a autenticação com o usuário do sistema
         /// </summary>
         private readonly string stringConexao = "Data source=localhost\\SQLEXPRESS; initial catalog=pedronogueira-d3-avaliacao; integrated security=true;";
+        SecurityRepository _security = new();
 
         public publicUser UserConnect(string login, string password)
         {
             // Declara a instrução a ser executada
-            string querySelect = "SELECT user_name, user_password, user_id FROM Users WHERE (user_email= @email AND user_password= @password)";
+            string querySelect = "SELECT user_name, user_password, user_id FROM Users WHERE user_email= @email";
 
             // Declara a SqlConnection con passando a string de conexão como parâmetro
             using (SqlConnection con = new SqlConnection(stringConexao))
             {
                 SqlCommand cmd = new SqlCommand(querySelect, con);
                 cmd.Parameters.AddWithValue("@email", login);
-                cmd.Parameters.AddWithValue("@password", password);
 
                 // Abre a conexão com o banco de dados
                 con.Open();
@@ -43,107 +41,31 @@ namespace pedronogueira_d3_avaliacao.Repositories
                 {
                     // Executa a query e armazena os dados no rdr
                     rdr = cmd.ExecuteReader();
-                    if (rdr.HasRows)
+
+                    // Retorna usuário público
+                    while (rdr.Read())
                     {
-                        // Retorna usuário público
-                        while (rdr.Read())
+                        if (_security.PasswordCompare(rdr["user_password"].ToString(), password))
                         {
-                            publicUser user = new() {
-                            // Atribui à propriedade nome o valor da coluna "user_id" da tabela do banco de dados
-                            IdUser = Guid.Parse((string)rdr["user_id"]),
-                            
-                            // Atribui à propriedade nome o valor da coluna "user_name" da tabela do banco de dados
-                            Name = rdr["user_name"].ToString()
+                            publicUser user = new()
+                            {
+                                // Atribui à propriedade nome o valor da coluna "user_id" da tabela do banco de dados
+                                IdUser = Guid.Parse((string)rdr["user_id"]),
+
+                                // Atribui à propriedade nome o valor da coluna "user_name" da tabela do banco de dados
+                                Name = rdr["user_name"].ToString()
                             };
 
                             return user;
                         }
-                        return null;
+                        else
+                        {
+                            return null;
+                        }
                     }
-                    else
-                    {
-                        return null;
-                    }
+                    return null;
                 }
             }
-        }
-
-        public bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-
-            try
-            {
-                // Normalize the domain
-                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
-                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
-
-                // Examines the domain part of the email and normalizes it.
-                string DomainMapper(Match match)
-                {
-                    // Use IdnMapping class to convert Unicode domain names.
-                    var idn = new IdnMapping();
-
-                    // Pull out and process domain name (throws ArgumentException on invalid)
-                    string domainName = idn.GetAscii(match.Groups[2].Value);
-
-                    return match.Groups[1].Value + domainName;
-                }
-            }
-            catch (RegexMatchTimeoutException e)
-            {
-                return false;
-            }
-            catch (ArgumentException e)
-            {
-                return false;
-            }
-
-            try
-            {
-                return Regex.IsMatch(email,
-                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
-
-        public string ReadPassword()
-        {
-            string password = "";
-            ConsoleKeyInfo info = Console.ReadKey(true);
-            while (info.Key != ConsoleKey.Enter)
-            {
-                if (info.Key != ConsoleKey.Backspace)
-                {
-                    Console.Write("*");
-                    password += info.KeyChar;
-                }
-                else if (info.Key == ConsoleKey.Backspace)
-                {
-                    if (!string.IsNullOrEmpty(password))
-                    {
-                        // remove one character from the list of password characters
-                        password = password.Substring(0, password.Length - 1);
-                        // get the location of the cursor
-                        int pos = Console.CursorLeft;
-                        // move the cursor to the left by one character
-                        Console.SetCursorPosition(pos - 1, Console.CursorTop);
-                        // replace it with space
-                        Console.Write(" ");
-                        // move the cursor to the left by one character again
-                        Console.SetCursorPosition(pos - 1, Console.CursorTop);
-                    }
-                }
-                info = Console.ReadKey(true);
-            }
-            // add a new line because user pressed enter at the end of their password
-            Console.WriteLine();
-            return password;
         }
     }
 }

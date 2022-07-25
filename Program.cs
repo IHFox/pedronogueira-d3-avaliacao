@@ -8,8 +8,8 @@ namespace pedronogueira_d3_avaliacao
         static void Main(string[] args)
         {
             UserRepository _user = new();
-
             LogRepository _log = new();
+            SecurityRepository _security = new();
 
             string option;
             Console.WriteLine("\n\n");
@@ -28,7 +28,6 @@ namespace pedronogueira_d3_avaliacao
                 switch (option)
                 {
                     case "a":
-                        string id;
                         string login;
                         string password;
                         publicUser user = new();
@@ -36,12 +35,10 @@ namespace pedronogueira_d3_avaliacao
                         Console.WriteLine("\nDigite seu nome de usuário:");
                         login = Console.ReadLine();
 
-                        if (_user.IsValidEmail(login)) // Checar se é um endereço de e-mail
+                        if (_security.IsValidEmail(login)) // Checar se é um endereço de e-mail
                         {
-
                             Console.WriteLine("\nDigite sua senha:");
-                            password = _user.ReadPassword();
-
+                            password = _security.ReadPassword();
 
                             user = _user.UserConnect(login, password); // Acessar banco de dados
                             if (user != null) // Checar acesso
